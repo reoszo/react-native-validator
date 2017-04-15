@@ -4,6 +4,8 @@ import hoistNonReactStatic from 'hoist-non-react-statics'
 let eventCenter = 。。。？
 
 // 现在的验证器只支持同步。。。？
+// Container 包含多层的验证逻辑。。。？
+
 export default v = {
     /**
      * 创建验证组件第一步：给容器组件增加验证方法，可以调用实例的 validate 方法验证所有子组件
@@ -179,6 +181,15 @@ export default v = {
     }
 
 }
+
+class _ValidatorContainer extends Component {
+    render() {
+        return this.props.children // 子元素不能是多个
+        // return <View>{this.props.children}</View> // 多了一个空View影响布局
+    }
+}
+
+export const ValidatorContainer = v.wrapValidatorContainer(_ValidatorContainer)
 
 // {
 //     message: "hello {name} \n hello '{'name'}'",
