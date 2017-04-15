@@ -2,8 +2,8 @@
 
 ## 组件增加验证功能
 1. 给容器组件添加验证方法，可以调用组件实例的 validate 方法验证内部的表单组件（或者使用自带的 ValidatorContainer 容器组件包裹所有表单）
-    假设你已经有一个 Form 组件，它是表单的容器组件
 ```
+    假设你已经有一个 Form 组件，它是表单的容器组件
     原 Form 组件代码
         import {Component} from 'react'
         ....
@@ -24,8 +24,8 @@
 ```
 
 2. 给表单组件增加验证规则，可以在组件上配置 validator 规则描述
-    假设你已经有一个 Input 组件
 ```
+    假设你已经有一个 Input 组件
     Input 使用方式为
         <Input
             label="用户名"
