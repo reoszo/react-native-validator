@@ -48,10 +48,12 @@
 ## 使用验证组件
 
 1. 拿到 form 实例
+```
      <Form ref={instance => this.form = instance}> xxx </Form>
+```
 
 2. 编写验证规则，或者直接使用 v 中默认的规则集
-
+```
      let required = {
          rule: v => !!v, // 可以直接使用默认验证器 v => v.and(v.required)(v)
          message: '酒店名称不能为空'
@@ -82,8 +84,10 @@
          <Input validator={{validate: [v.required, v.gt(0)]}} /> 必填 且 大于0
          <Input validator={{validate: v.and(v.required, v.range(0, 1)]}} />  必填 且 在0到1之间 // 和数组等价
          <Input validator={{validate: v.or(v.lt(1), v.gt(10))}} /> 小于1 或 大于10
+```
 
 3. 调用 form 的验证方法
+```
      <Button title="保存" onPress={e => this.submit()}>
      submit(){
           this.form.validate().then(e => {
