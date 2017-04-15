@@ -1,7 +1,7 @@
 import { Component } from 'react'
 import hoistNonReactStatic from 'hoist-non-react-statics'
 
-let eventCenter = 。。。？
+let eventCenter = 。。。？// 增加
 
 // 现在的验证器只支持同步。。。？
 // Container 包含多层的验证逻辑。。。？
@@ -184,8 +184,9 @@ export default v = {
 
 class _ValidatorContainer extends Component {
     render() {
-        return this.props.children // 子元素不能是多个
-        // return <View>{this.props.children}</View> // 多了一个空View影响布局
+        // return this.props.children // 试试多个子元素是否异常。。。？
+        let { children, style } = this.props
+        return <View style={style}>{children}</View>
     }
 }
 
