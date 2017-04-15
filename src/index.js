@@ -26,15 +26,15 @@ export default v = {
                 return this.state
             }
 
-            validate(cancelToast) {
+            validate(cancelDefaultHandler) {
                 return new Promise((resolve, reject) => {
                     let errors = []
                     eventCenter.trigger(this.state.validatorId, errors)
                     if (errors.length) {
-                        if (cancelToast) {
+                        if (cancelDefaultHandler) {
                             reject(errors)
                         } else {
-                            Toast.show(errors[0].message, Toast.LONG, Toast.BOTTOM)
+                            v.resultHandle(errors)
                         }
                     } else {
                         resolve()
@@ -108,7 +108,7 @@ export default v = {
                     messages = validate(param.value, param)
                     invalid = messages.length > 0
                     if (errorToast && invalid) {
-                        v.resultHander(messages.map(message => ({
+                        v.resultHandle(messages.map(message => ({
                             element: this,
                             message: message
                         })))
@@ -140,9 +140,9 @@ export default v = {
         return Element
     },
 
-    resultHander(errors){
+    resultHandle(errors) {
         // 结果默认处理器
-        ToastAndroid.show(errors[0].message)
+        // ToastAndroid.show(errors[0].message)
     },
 
     // 组合规则，and or
@@ -276,7 +276,7 @@ v.addRules({
         rule: /^([-a-z0-9_-])+$/,
         message: "{name}只能包含字母、数字、横线和下划线"
     },
-    min: n => ({
+    min: n => ({ // 使用函数闭包传递参数
         rule: v => Number(v) >= Number(n),
         message: `{name}应该不小于${n}`
     }),
@@ -284,7 +284,7 @@ v.addRules({
         rule: v => Number(v) <= Number(n),
         message: `{name}应该不超过${n}`
     }),
-    range: (min, max) => ({ // 使用函数闭包传递参数
+    range: (min, max) => ({
         rule: v => Number(v) > Number(min) && Number(v) < Number(max),
         message: `{name}必须在${min}和${max}之间`
     }),
