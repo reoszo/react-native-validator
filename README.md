@@ -2,6 +2,7 @@
 
 ## 组件增加验证功能
 1. 给容器组件添加验证方法，可以调用组件实例的 validate 方法验证内部的表单组件（或者使用自带的 ValidatorContainer 容器组件包裹所有表单）
+```
     假设你已经有一个 Form 组件，它是表单的容器组件
     原 Form 组件代码
         import {Component} from 'react'
@@ -20,8 +21,10 @@
             }
             ...
             export default v.wrapValidatorContainer(Form) // 改动3、改为 export defaut 包装结果
+```
 
 2. 给表单组件增加验证规则，可以在组件上配置 validator 规则描述
+```
     假设你已经有一个 Input 组件
     Input 使用方式为
         <Input
@@ -75,6 +78,7 @@
             skipKey: 'disabled', // 从 Input 组件获取，当 skipKey 属性为 true 时跳过验证
             invalidKey: 'invalid' // 给 Input 组件添加验证结果标志，验证失败的属性名
         })
+```
 
 3. 给验证器增加默认错误处理函数
 ```
