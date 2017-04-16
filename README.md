@@ -97,14 +97,14 @@
 2. 编写验证规则，或者直接使用 v 中默认的规则集
 ```
      let required = {
-         rule: v => !!v, // 可以直接使用默认验证器 v => v.and(v.required)(v)
+         rule: value => !!value, // 可以直接使用默认验证器 value => v.and(v.required)(value)
          message: '用户名不能为空'
      }
      使用编写好的验证规则 required
          <Input label="用户名" validator={{validate: required}} /> // 用户名不能为空
     
     v.required: {
-        rule: v => /[\S]+/.test(v),
+        rule: value => /[\S]+/.test(value),
         message: "{name}不能为空"
     }
      使用默认验证规则，传递 message 参数，默认传递 { name: label } 参数
