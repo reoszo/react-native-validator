@@ -1,26 +1,56 @@
 import { Component } from 'react'
+import { Alert } from 'react-native'
 import hoistNonReactStatic from 'hoist-non-react-statics'
 
-let eventCenter = 。。。？// 增加
+class EventCenter {
+    constructor() {
+        this._events = {}
+    }
+    on(name, listener, context) {
+        let events = this._events[name] || (this._events[name] = [])
+        events.push({
+            listener,
+            context
+        })
+    }
+    off(name, listener) {
+        if (listener && this._events[name]) {
+            let events = this.events[name].filters(event => event.listener != listener)
+            if (events.length > 0) {
+                this._events[name] = events
+            } else {
+                delete this._events[name]
+            }
+        } else {
+            delete this._events[name]
 
-// 现在的验证器只支持同步。。。？
-// Container 包含多层的验证逻辑。。。？
+        }
+    }
+    emit(name, ...args) {
+        let events = this._events[name] || []
+        for (let i = 0, l = events.length; i < l; i++) {
+            let event = events[i]
+            event.listener.apply(event.context, args)
+        }
+    }
+}
 
 export default v = {
+    _eventCenter: new EventCenter(),
     /**
-     * 创建验证组件第一步：给容器组件增加验证方法，可以调用实例的 validate 方法验证所有子组件
+     * 第一步：给容器组件增加验证方法，可以调用实例的 validate 方法验证所有子组件
      * @param {*} WrappedComponent 
      */
     wrapValidatorContainer(WrappedComponent) {
         class Container extends Component {
             static childContextTypes = {
-                validatorId: React.PropTypes.any
+                validatorSymbol: React.PropTypes.any
             }
 
             constructor(...args) {
                 super(...args)
                 this.state = {
-                    validatorId: Symbol()
+                    validatorSymbol: Symbol()
                 }
             }
 
@@ -31,7 +61,7 @@ export default v = {
             validate(cancelDefaultHandler) {
                 return new Promise((resolve, reject) => {
                     let errors = []
-                    eventCenter.trigger(this.state.validatorId, errors)
+                    v._eventCenter.emit(this.state.validatorSymbol, errors)
                     if (errors.length) {
                         if (cancelDefaultHandler) {
                             reject(errors)
@@ -46,7 +76,7 @@ export default v = {
 
             render() {
                 let { innerRef, ...props } = this.props
-                return <WrappedComponent ref={innerRef} {...props} /> // children 能传过去。。。？
+                return <WrappedComponent ref={innerRef} {...props} />
             }
         }
 
@@ -56,7 +86,7 @@ export default v = {
     },
 
     /**
-     * 创建验证组件第二步：给需要验证的组件增加验证器，可以在组件上使用 validator 属性响应容器的 validate 方法
+     * 第二步：给需要验证的组件增加验证器，可以在组件上使用 validator 属性响应容器的 validate 方法
      * @param {*} WrappedComponent 
      * @param {*} propKeyMap
      *      nameKey: 从 WrappedComponent 组件获取，传递给验证器的 name 属性名
@@ -67,7 +97,7 @@ export default v = {
     wrapValidatorElement(WrappedComponent, { nameKey = 'label', valueKey = 'value', skipKey = 'disabled', invalidKey = 'invalid' }) {
         class Element extends Component {
             static contextTypes = {
-                validatorId: React.PropTypes.any
+                validatorSymbol: React.PropTypes.any
             }
 
             constructor(props) {
@@ -78,21 +108,21 @@ export default v = {
             }
 
             componentDidMount() {
-                if (this.context.validatorId && this.props.validator) {
-                    eventCenter.on(this.context.validatorId, this.onValidate, this)
+                if (this.context.validatorSymbol && this.props.validator) {
+                    v._eventCenter.on(this.context.validatorSymbol, this.onValidate, this)
                 }
             }
 
             componentWillReceiveProps(nextProps) {
-                let hasValidator = this.context.validatorId && this.props.validator
+                let hasValidator = this.context.validatorSymbol && this.props.validator
                 if (hasValidator && this.props.validator.on === 'change' && this.props[valueKey] !== nextProps[valueKey]) {
                     this.validate(nextProps, true)
                 }
             }
 
             componentWillUnmount() {
-                if (this.context.validatorId && this.props.validator) {
-                    eventCenter.off(this.context.validatorId, this.onValidate, this)
+                if (this.context.validatorSymbol && this.props.validator) {
+                    v._eventCenter.off(this.context.validatorSymbol, this.onValidate, this)
                 }
             }
 
@@ -131,9 +161,9 @@ export default v = {
             }
 
             render() {
-                let { ...props } = this.props
+                let { innerRef, ...props } = this.props
                 props[invalidKey] = this.state.invalid // 传递验证结果
-                return <WrappedComponent {...props} /> // children 能传过去。。。？
+                return <WrappedComponent ref={innerRef} {...props} />
             }
         }
 
@@ -142,9 +172,9 @@ export default v = {
         return Element
     },
 
+    // 结果默认处理器
     resultHandle(errors) {
-        // 结果默认处理器
-        // ToastAndroid.show(errors[0].message)
+        Alert.alert(errors[0].message)
     },
 
     // 组合规则，and or
@@ -184,9 +214,7 @@ export default v = {
 
 class _ValidatorContainer extends Component {
     render() {
-        // return this.props.children // 试试多个子元素是否异常。。。？
-        let { children, style } = this.props
-        return <View style={style}>{children}</View>
+        return <View {...this.props} />
     }
 }
 
