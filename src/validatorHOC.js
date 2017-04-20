@@ -23,7 +23,7 @@ function formatMessage(message, param) {
     })
 }
 
-export default validatorHOC = {
+export default ValidatorHOC = {
     _eventCenter: new EventCenter(),
     /**
      * 第一步：给容器组件增加验证方法，可以调用实例的 validate 方法验证所有子组件
