@@ -2,27 +2,6 @@ import { Component } from 'react'
 import hoistNonReactStatic from 'hoist-non-react-statics'
 import EventCenter from './EventCenter'
 
-// {
-//     message: "hello {name} \n hello '{'name'}'",
-//     param: {
-//         name: 'world'
-//     }
-// }
-function formatMessage(message, param) {
-    let reg = /('{')|('}')|({(\w+)})/g
-    return (param.message || message).replace(reg, (src, $1, $2, $3, $4) => {
-        if ($1) {
-            return '{'
-        }
-        if ($2) {
-            return '}'
-        }
-        if ($4) {
-            return param[$4] || ''
-        }
-    })
-}
-
 export default ValidatorHOC = {
     _eventCenter: new EventCenter(),
     /**

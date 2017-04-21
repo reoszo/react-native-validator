@@ -9,9 +9,9 @@ export default class EventCenter {
             context
         })
     }
-    off(name, listener) {
-        if (listener && this._events[name]) {
-            let events = this.events[name].filters(event => event.listener != listener)
+    off(name, listener, context) {
+        if (this._events[name] && (listener || context)) {
+            let events = this._events[name].filter(event => !(listener && listener === event.listener || context && context === event.context))
             if (events.length > 0) {
                 this._events[name] = events
             } else {
@@ -19,14 +19,10 @@ export default class EventCenter {
             }
         } else {
             delete this._events[name]
-
         }
     }
     emit(name, ...args) {
         let events = this._events[name] || []
-        for (let i = 0, l = events.length; i < l; i++) {
-            let event = events[i]
-            event.listener.apply(event.context, args)
-        }
+        events.forEach(event => event.listener.apply(event.context, args))
     }
 }
