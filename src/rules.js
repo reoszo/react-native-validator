@@ -3,12 +3,15 @@ function str(value) { // 转换 string
 }
 
 export default rules = {
+    empty: {
+        rule: value => value === '' || value === undefined || value === null
+    },
     required: { // 函数验证规则
-        rule: value => /[\S]+/.test(str(value)),
+        rule: value => value !== '' && value !== undefined && value !== null,
         message: "{name}不能为空" // 使用大括号传递 message 参数
     },
     selected: {
-        rule: value => /[\S]+/.test(str(value)),
+        rule: value => value !== '' && value !== undefined && value !== null,
         message: "请选择{name}"
     },
     digit: { // 正则验证规则
