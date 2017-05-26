@@ -3,18 +3,25 @@ function str(value) { // 转换 string
 }
 
 export default {
+    empty: {
+        rule: value => str(value) === ''
+    },
     required: { // 函数验证规则
-        rule: value => /[\S]+/.test(str(value)),
+        rule: value => str(value) !== '',
         message: "{name}不能为空" // 使用大括号传递 message 参数
     },
     selected: {
-        rule: value => /[\S]+/.test(str(value)),
+        rule: value => str(value) !== '',
         message: "请选择{name}"
     },
     digit: { // 正则验证规则
         rule: /^\d+$/,
         message: '{name}只允许输入数字'
     },
+    // numeric: { // 只是0-9的数字，和number区别
+    //     rule: /^[-]?\d+(\.\d+)?$/,
+    //     message: "{name}必须为数值类型"
+    // },
     number: { // 增加正数、负数、整数、小数等快捷规则。。。？
         rule: /^(?:-?\d+|-?\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/,
         message: "{name}必须为数值类型"
@@ -43,7 +50,7 @@ export default {
         rule: /^([a-zA-Z0-9-_])+$/,
         message: "{name}只能包含字母、数字、横线和下划线"
     },
-    eq: n => ({
+    eq: n => ({ // 动态参数验证规则，使用函数闭包传递参数
         rule: value => value == n,
         message: `{name}必须为${n}`
     }),
