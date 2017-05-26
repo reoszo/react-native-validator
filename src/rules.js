@@ -2,7 +2,7 @@ function str(value) { // 转换 string
     return (str === null || str === undefined) ? '' : String(value)
 }
 
-export default rules = {
+export default {
     required: { // 函数验证规则
         rule: value => /[\S]+/.test(str(value)),
         message: "{name}不能为空" // 使用大括号传递 message 参数
