@@ -51,7 +51,7 @@
 2. 编写验证规则，或者直接使用自带的默认的规则集
 
         let required = { // 函数验证规则
-            rule: v => v === '' || v === undefined || v === null,
+            rule: value => value === '' || value === undefined || value === null,
             message: "{name}不能为空"
         }
         let digit = { // 正则验证规则
@@ -59,22 +59,22 @@
             message: '{name}只允许输入数字'
         }
         let range = (min, max) => ({ // 动态参数验证规则，使用函数闭包传递参数
-            rule: v => Number(v) > Number(min) && Number(v) < Number(max),
+            rule: value => Number(value) > Number(min) && Number(value) < Number(max),
             message: `{name}必须在${min}和${max}之间`
         })
         let mygt = { // 传递参数
-            rule: (val, param) => val > param.min,
+            rule: (value, param) => value > param.min,
             message: '{name}必须大于{min}'
         }
         // 自定义规则和提示信息
         let rateNumber = function (value, param) {
-            if (!v.number.rule(value)) { // 使用内置验证器
+            if (!rules.number.rule(value)) { // 使用内置验证器
                 return '客房价格必须是数字'
             }
-            if (!v.min(0).rule(value)) {
+            if (!rules.min(0).rule(value)) {
                 return '客房价格必须大于 0'
             }
-            if (!v.maxlength(6).rule(value)) {
+            if (!rules.maxlength(6).rule(value)) {
                 return '客房价格最多 6 位数'
             }
         }
@@ -90,11 +90,11 @@
 
     * 使用默认验证规则，覆盖提示信息
 
-            <Input label="用户名" validator={{validate: v.required, message: '请输入用户名'}} />
+            <Input label="用户名" validator={{validate: rules.required, message: '请输入用户名'}} />
 
     * 使用带参数的验证规则
 
-            <Input label="金额" validator={{validate: v.range(0, 10), name: '金额'}} /> // 金额必须在0和10之间
+            <Input label="金额" validator={{validate: rules.range(0, 10), name: '金额'}} /> // 金额必须在0和10之间
             也可以使用属性传递验证参数（不推荐，已废弃）
             let myrange = {
                 rule: (value, param) => value > param.min && value < param.max
