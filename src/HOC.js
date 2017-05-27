@@ -1,4 +1,5 @@
 import { Component } from 'react'
+import { Alert } from 'react-native'
 import hoistNonReactStatic from 'hoist-non-react-statics'
 import EventEmitter from 'EventEmitter'
 
@@ -24,6 +25,16 @@ function formatMessage(message, param) {
 }
 
 const eventEmitter = new EventEmitter()
+
+let errorHandler = function (errors) {
+    Alert.alert(errors[0].message)
+}
+
+export function setHandler(handler) {
+    if (typeof handler === 'function') {
+        errorHandler = handler
+    }
+}
 
 /**
  * 第一步：给容器组件增加 validate 验证方法
@@ -54,7 +65,7 @@ export function wrapContainer(WrappedComponent) {
                     if (cancelDefaultHandler) {
                         reject(errors)
                     } else {
-                        ValidatorHOC.errorHandle(errors)
+                        errorHandler(errors)
                     }
                 } else {
                     resolve()

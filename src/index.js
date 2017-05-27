@@ -1,5 +1,5 @@
 import { Component } from 'react'
-import { wrapContainer, wrapElement, checkRule, exec, and, or } from 'HOC'
+import { wrapContainer, wrapElement, setHandler, checkRule, exec, and, or } from './HOC'
 import rules from './rules'
 
 // 添加默认容器组件
@@ -10,10 +10,11 @@ class Container extends Component {
 }
 const ValidatorContainer = wrapContainer(Container)
 
-export {
+export default {
     ValidatorContainer,
     wrapContainer,
     wrapElement,
+    setHandler,
     checkRule,
     rules,
     exec,
