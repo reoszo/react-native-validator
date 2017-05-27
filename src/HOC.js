@@ -1,7 +1,7 @@
 import { Component } from 'react'
 import { Alert } from 'react-native'
 import hoistNonReactStatic from 'hoist-non-react-statics'
-import EventCenter from 'EventCenter'
+import EventCenter from './EventCenter'
 
 // {
 //     message: "hello {name} \n hello '{'name'}'",
