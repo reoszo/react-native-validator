@@ -14,6 +14,17 @@
             or
         } from 'react-native-validator'
 
+## package.json 依赖
+
+        react-native-validator 未引入 react 和 react-native 的依赖，需要项目自己引入
+        "dependencies": {
+            // 先引入 react + react-native 等
+            ...
+            // 后引入 react-native-validator
+            "react-native-validator": "git+ssh://git@github.com:reoszo/react-native-validator.git"
+        },
+
+
 ## 组件增加验证功能
 1. 给容器组件添加验证方法，可以调用组件实例的 validate 方法验证内部的表单组件（或者使用自带的 ValidatorContainer 容器组件包裹所有表单），假设你已经有一个 Form 组件，它是表单的容器组件
 
