@@ -1,7 +1,7 @@
 import { Component } from 'react'
 import { Alert } from 'react-native'
 import hoistNonReactStatic from 'hoist-non-react-statics'
-import EventEmitter from 'EventEmitter'
+import EventCenter from 'EventCenter'
 
 // {
 //     message: "hello {name} \n hello '{'name'}'",
@@ -24,7 +24,7 @@ function formatMessage(message, param) {
     })
 }
 
-const eventEmitter = new EventEmitter()
+const eventCenter = new EventCenter()
 
 let errorHandler = function (errors) {
     Alert.alert(errors[0].message)
@@ -60,7 +60,7 @@ export function wrapContainer(WrappedComponent) {
         validate(cancelDefaultHandler) {
             return new Promise((resolve, reject) => {
                 let errors = []
-                eventEmitter.emit(this.state.validatorSymbol, errors)
+                eventCenter.emit(this.state.validatorSymbol, errors)
                 if (errors.length) {
                     if (cancelDefaultHandler) {
                         reject(errors)
@@ -110,7 +110,7 @@ export function wrapElement(WrappedComponent, { nameKey = 'label', valueKey = 'v
 
         componentDidMount() {
             if (this.context.validatorSymbol && this.props.validator) {
-                eventEmitter.addListener(this.context.validatorSymbol, this.onValidate, this)
+                eventCenter.on(this.context.validatorSymbol, this.onValidate, this)
             }
         }
 
@@ -123,7 +123,7 @@ export function wrapElement(WrappedComponent, { nameKey = 'label', valueKey = 'v
 
         componentWillUnmount() {
             if (this.context.validatorSymbol && this.props.validator) {
-                eventEmitter.removeListener(this.context.validatorSymbol, this.onValidate)
+                eventCenter.off(this.context.validatorSymbol, this.onValidate)
             }
         }
 
