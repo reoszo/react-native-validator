@@ -21,6 +21,3 @@ export default {
     and,
     or
 }
-
-// 设置错误处理器
-// ValidatorHOC.errorHandle = errors => Alert.alert(errors[0].message)
