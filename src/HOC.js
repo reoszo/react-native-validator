@@ -1,7 +1,7 @@
 import { Component } from 'react'
-import { Alert } from 'react-native'
 import hoistNonReactStatic from 'hoist-non-react-statics'
 import EventCenter from './EventCenter'
+import util from './util'
 
 // {
 //     message: "hello {name} \n hello '{'name'}'",
@@ -9,7 +9,7 @@ import EventCenter from './EventCenter'
 //         name: 'world'
 //     }
 // }
-function formatMessage(message, param) {
+function format(message, param) {
     let reg = /('{')|('}')|({(\w+)})/g
     return (param.message || message).toString().replace(reg, (src, $1, $2, $3, $4) => {
         if ($1) {
@@ -27,7 +27,7 @@ function formatMessage(message, param) {
 const eventCenter = new EventCenter()
 
 let errorHandler = function (errors) {
-    Alert.alert(errors[0].message)
+    // 默认错误处理
 }
 
 export function setHandler(handler) {
@@ -177,11 +177,11 @@ export function exec(rule, value, param) { // 执行 rule，验证失败返回�
         }
         if (rule.rule instanceof RegExp) {
             if (!rule.rule.test(value)) {
-                return formatMessage(context.message, param)
+                return format(context.message, param)
             }
         } else if (typeof rule.rule === 'function') {
             if (!rule.rule.call(context, value, param)) {
-                return formatMessage(context.message, param)
+                return format(context.message, param)
             }
         }
     }
