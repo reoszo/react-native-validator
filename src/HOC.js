@@ -106,6 +106,8 @@ export function wrapElement(WrappedComponent, { nameKey = 'label', valueKey = 'v
                 invalid: false,
                 message: ''
             }
+            // 生成实例方法，否则多个实例共享一个原型链方法
+            this.onValidate = this.onValidate.bind(this)
         }
 
         componentDidMount() {
